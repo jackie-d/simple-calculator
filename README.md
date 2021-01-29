@@ -10,6 +10,18 @@ Hosting:
 
 ## Setup Instructions
 
+Setup for development is automatic on run
+
+```
+
+```
+
 ## Run Instuctions
 
-© Year 2021 - Jackie degli Innocenti
+```
+mvn clean install
+cd backend
+mvn spring-boot:run
+```
+
+_© Year 2021 - Jackie degli Innocenti_
