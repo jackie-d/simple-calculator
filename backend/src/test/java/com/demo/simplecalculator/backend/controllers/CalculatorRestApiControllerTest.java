@@ -26,4 +26,92 @@ public class CalculatorRestApiControllerTest {
         ).andExpect(status().isOk()).andReturn();
     }
     
+    @Test
+    void getEquationSolutionFiltersInvalidInput() throws Exception {
+        // filter block
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","A","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}",null,"+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12","5","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",null,"3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12","","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12","+","?")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12","+",null)
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12","+","")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2,2","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}",".2","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2.","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2.2.","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2-","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2","•","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3.5","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3","+","3.0")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotAcceptable()).andReturn();
+        
+        // filter pass
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk()).andReturn();
+       
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","-3","+","3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk()).andReturn();
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3","+","-3")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk()).andReturn();
+    }
+    
 }
