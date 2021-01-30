@@ -1,6 +1,8 @@
 package com.demo.simplecalculator.backend.controllers;
 
 import com.demo.simplecalculator.backend.models.Equation;
+import java.util.Map;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,8 @@ public class CalculatorRestApiController {
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
         }
         
-        return new ResponseEntity<>(new Equation(), HttpStatus.OK);
+        Equation solution = getEquationSolution(number1, number2, sign);
+        return new ResponseEntity<>(solution, HttpStatus.OK);
     }
     
     private boolean isInputAcceptable(String number1, String number2, String sign) {
@@ -45,7 +48,33 @@ public class CalculatorRestApiController {
     }
     
     private boolean isValidSign(String value) {
-        return String.valueOf( value ).matches( "[+-/\\*]" );
+        return Equation.SignSymbols.values().contains(value);
     }
     
+    private Equation getEquationSolution(String number1, String number2, String signSymbol) {
+        int int1 = Integer.valueOf(number1);
+        int int2 = Integer.valueOf(number2);
+        
+        Equation.Sign sign = Equation.getSignBySymbol(signSymbol);
+        double result = 0;
+        switch( sign ) {
+            case PLUS:
+                    result = simpleCalculator.add(int1, int2);
+                    break;
+            case MINUS:
+                    result = simpleCalculator.subtract(int1, int2);
+                    break;
+            case MULTIPLICATION:
+                    result = simpleCalculator.multiply(int1, int2);
+                    break;
+            case DIVISION:
+                    result = simpleCalculator.divide(int1, int2);
+                    break;
+        }
+        
+        Equation solution = new Equation(int1, int2, sign, result);
+        
+        return solution;
+    }
+
 }

@@ -3,10 +3,37 @@ package com.demo.simplecalculator.backend.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.HashMap;
+import org.springframework.util.StringUtils;
 
 @Entity
 public class Equation {
+    
     public enum Sign {PLUS, MINUS, MULTIPLICATION, DIVISION};
+    
+    // map for casting between char symbol representation and enum value
+    
+    final public static HashMap<Sign, String> SignSymbols = new HashMap() {{
+        put(Sign.PLUS, "+");
+        put(Sign.MINUS, "-");
+        put(Sign.MULTIPLICATION, "x");
+        put(Sign.DIVISION, "%");
+    }};
+    
+    final public static Equation.Sign getSignBySymbol(String signSymbol) {
+        if ( StringUtils.isEmpty(signSymbol) ) {
+            return null;
+        }
+        return Equation.SignSymbols
+            .entrySet()
+            .stream()
+            .filter(entry -> signSymbol.equals(entry.getValue()))
+            .findFirst()
+            .get()
+            .getKey();
+    }
+    
+    // attributes
     
     @Id
     @GeneratedValue
@@ -14,7 +41,10 @@ public class Equation {
     private int number1;
     private int number2;
     private Sign sign = null;
+    private String signSymbol = null;
     private double result;
+    
+    // constructors
 
     public Equation() {
     }
@@ -24,6 +54,7 @@ public class Equation {
         this.number1 = number1;
         this.number2 = number2;
         this.sign = sign;
+        this.signSymbol = this.SignSymbols.get(sign);
         this.result = result;
     }
     
@@ -31,6 +62,7 @@ public class Equation {
         this.number1 = number1;
         this.number2 = number2;
         this.sign = sign;
+        this.signSymbol = this.SignSymbols.get(sign);
         this.result = result;
     }
     
@@ -38,7 +70,10 @@ public class Equation {
         this.number1 = number1;
         this.number2 = number2;
         this.sign = sign;
+        this.signSymbol = this.SignSymbols.get(sign);
     }
+    
+    // getters and setters
 
     public long getId() {
         return id;
@@ -70,6 +105,7 @@ public class Equation {
 
     public void setSign(Sign sign) {
         this.sign = sign;
+        this.signSymbol = this.SignSymbols.get(sign);
     }
 
     public double getResult() {
@@ -78,6 +114,14 @@ public class Equation {
 
     public void setResult(double result) {
         this.result = result;
+    }
+
+    public String getSignSymbol() {
+        return signSymbol;
+    }
+
+    public void setSignSymbol(String signSymbol) {
+        this.signSymbol = signSymbol;
     }
     
 }
