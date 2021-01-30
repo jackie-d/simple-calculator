@@ -11,15 +11,15 @@ public class Equation {
     @Id
     @GeneratedValue
     private long id;
-    private double number1;
-    private double number2;
+    private int number1;
+    private int number2;
     private Sign sign = null;
     private double result;
 
     public Equation() {
     }
 
-    public Equation ( long id, double number1, double number2, Sign sign, double result ) {
+    public Equation ( long id, int number1, int number2, Sign sign, double result ) {
         this.id = id;
         this.number1 = number1;
         this.number2 = number2;
@@ -27,14 +27,14 @@ public class Equation {
         this.result = result;
     }
     
-    public Equation ( double number1, double number2, Sign sign, double result ) {
+    public Equation ( int number1, int number2, Sign sign, double result ) {
         this.number1 = number1;
         this.number2 = number2;
         this.sign = sign;
         this.result = result;
     }
     
-    public Equation ( double number1, double number2, Sign sign ) {
+    public Equation ( int number1, int number2, Sign sign ) {
         this.number1 = number1;
         this.number2 = number2;
         this.sign = sign;
@@ -48,19 +48,19 @@ public class Equation {
         this.id = id;
     }
 
-    public double getNumber1() {
+    public int getNumber1() {
         return number1;
     }
 
-    public void setNumber1(double number1) {
+    public void setNumber1(int number1) {
         this.number1 = number1;
     }
 
-    public double getNumber2() {
+    public int getNumber2() {
         return number2;
     }
 
-    public void setNumber2(double number2) {
+    public void setNumber2(int number2) {
         this.number2 = number2;
     }
 
