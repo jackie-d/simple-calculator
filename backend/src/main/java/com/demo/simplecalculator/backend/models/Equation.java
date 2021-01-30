@@ -15,33 +15,16 @@ public class Equation {
     private double number2;
     private Sign sign = null;
     private double result;
-    private boolean isNan = false;
 
     public Equation() {
     }
 
-    public Equation ( long id, double number1, double number2, Sign sign, double result, boolean isNan ) {
-        this.id = id;
-        this.number1 = number1;
-        this.number2 = number2;
-        this.sign = sign;
-        this.result = result;
-        this.isNan = isNan;
-    }
-    
     public Equation ( long id, double number1, double number2, Sign sign, double result ) {
         this.id = id;
         this.number1 = number1;
         this.number2 = number2;
         this.sign = sign;
         this.result = result;
-    }
-    
-    public Equation ( double number1, double number2, Sign sign, boolean isNan ) {
-        this.number1 = number1;
-        this.number2 = number2;
-        this.sign = sign;
-        this.isNan = isNan;
     }
     
     public Equation ( double number1, double number2, Sign sign, double result ) {
@@ -96,14 +79,5 @@ public class Equation {
     public void setResult(double result) {
         this.result = result;
     }
-
-    public boolean isNan() {
-        return isNan;
-    }
-
-    public void setNan(boolean isNan) {
-        this.isNan = isNan;
-    }
-    
     
 }
