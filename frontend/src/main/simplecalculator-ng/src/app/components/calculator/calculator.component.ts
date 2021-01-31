@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { ApiService } from '../../services/api.service';
+
 import { faCaretSquareLeft, faCaretSquareRight, faEraser, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -29,7 +31,9 @@ export class CalculatorComponent implements OnInit {
     private history = [];
     private currentHistoryShown = -1;
 
-    constructor() { }
+    constructor(
+        private api: ApiService
+    ) { }
 
     ngOnInit(): void {}
 
@@ -85,9 +89,17 @@ export class CalculatorComponent implements OnInit {
     private async elaborateResult() {
         // mock
         this.state = State.Loading;
-        await new Promise( resolve => setTimeout(resolve, 500) );
-        this.state = State.Result;
-        this.showResult();
+        const signSymbol = SignSymbols[this.sign];
+        // await new Promise( resolve => setTimeout(resolve, 500) );
+        try {
+            const equation = await this.api.solveEquation(this.number1, this.number2, signSymbol).toPromise();
+            console.log(equation);
+            this.state = State.Result;
+            this.showResult();
+        } catch(error) {
+            alert('API Server error');
+            this.reset();
+        }
     }
 
     private showResult() {
@@ -159,4 +171,11 @@ export enum State {
     SecondNumber,
     Result,
     Loading
+};
+
+export const SignSymbols = {
+    '+': '+',
+    '-': '-',
+    'x': 'x',
+    '/': '%'
 };
