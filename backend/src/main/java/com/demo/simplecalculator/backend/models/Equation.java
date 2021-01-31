@@ -1,9 +1,11 @@
 package com.demo.simplecalculator.backend.models;
 
+import java.util.AbstractMap;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.HashMap;
+import java.util.Map;
 import org.springframework.util.StringUtils;
 
 @Entity
@@ -21,15 +23,12 @@ public class Equation {
     }};
     
     final public static Equation.Sign getSignBySymbol(String signSymbol) {
-        if ( StringUtils.isEmpty(signSymbol) ) {
-            return null;
-        }
         return Equation.SignSymbols
             .entrySet()
             .stream()
             .filter(entry -> signSymbol.equals(entry.getValue()))
             .findFirst()
-            .get()
+            .orElse(new AbstractMap.SimpleEntry<Sign, String>(null,null))
             .getKey();
     }
     
@@ -122,6 +121,7 @@ public class Equation {
 
     public void setSignSymbol(String signSymbol) {
         this.signSymbol = signSymbol;
+        this.sign = getSignBySymbol(signSymbol);
     }
     
 }
