@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { ApiService } from '../../services/api.service';
 
+import { Equation } from '../../models/equation';
+
 import { faCaretSquareLeft, faCaretSquareRight, faEraser, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -92,18 +94,19 @@ export class CalculatorComponent implements OnInit {
         const signSymbol = SignSymbols[this.sign];
         // await new Promise( resolve => setTimeout(resolve, 500) );
         try {
-            const equation = await this.api.solveEquation(this.number1, this.number2, signSymbol).toPromise();
+            const equationObj: any = await this.api.solveEquation(this.number1, this.number2, signSymbol).toPromise();
+            const equation: Equation = equationObj;
             console.log(equation);
             this.state = State.Result;
-            this.showResult();
+            this.showResult(equation);
         } catch(error) {
             alert('API Server error');
             this.reset();
         }
     }
 
-    private showResult() {
-        this.screenValue = '<solution>';
+    private showResult(equation: Equation) {
+        this.screenValue = equation.result + '';
     }
 
 
