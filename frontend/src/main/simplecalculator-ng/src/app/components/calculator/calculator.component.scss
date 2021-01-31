@@ -146,3 +146,14 @@ input[readonly] {
 .calculator-column {
   text-align: center;
 }
+
+.screen-container {
+    position: relative;
+}
+
+.loading-icon{
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    margin-top: -10px;
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { faHistory, faEraser } from '@fortawesome/free-solid-svg-icons';
+import { faCaretSquareLeft, faCaretSquareRight, faEraser, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-calculator',
@@ -12,49 +12,56 @@ import { faHistory, faEraser } from '@fortawesome/free-solid-svg-icons';
 })
 export class CalculatorComponent implements OnInit {
 
-    screenValue: string = '';
-    upperScreenValue: string = '=';
+    public screenValue: string = '';
+    public upperScreenValue: string = '';
 
-    state: State = State.FirstNumber;
+    private state: State = State.FirstNumber;
 
-    number1 = null;
-    number2 = null;
-    sign = null;
+    private number1 = null;
+    private number2 = null;
+    private sign = null;
 
-    faHistory = faHistory;
-    faEraser = faEraser;
+    public faCaretSquareLeft = faCaretSquareLeft;
+    public faCaretSquareRight = faCaretSquareRight;
+    public faEraser = faEraser;
+    public faSpinner = faSpinner;
 
+    private history = [];
+    private currentHistoryShown = null;
 
     constructor() { }
 
     ngOnInit(): void {}
 
-    digitNumber(number: string){
+    public digitNumber(number: string){
         if ( this.state == State.Result ) {
             this.reset();
         } 
         this.screenValue += number;
     }
 
-    digitSign(sign: string) {
+    public digitSign(sign: string) {
         if ( this.screenValue == '' ) {
             return;
         }
         this.number1 = parseInt(this.screenValue);
+        this.upperScreenValue = this.number1 + ' ' + sign;
         this.screenValue = '';
         this.sign = sign;
+        this.state = State.SecondNumber;
     }
 
-    getResult() {
+    public getResult() {
         if ( this.screenValue == '' ) {
             return;
         }
         this.number2 = parseInt(this.screenValue);
+        this.upperScreenValue += ' ' + this.number2;
         this.screenValue = '';
         this.elaborateResult();
     }
 
-    reset() {
+    public reset() {
         this.state = State.FirstNumber;
         this.screenValue = '';
         this.upperScreenValue = '';
@@ -63,15 +70,19 @@ export class CalculatorComponent implements OnInit {
         this.sign = null;
     }
 
-    isSignButtonsEnabled() {
+    public isSignButtonsEnabled() {
         return this.state == State.FirstNumber;// && this.state != State.Loading;
     }
 
-    isResultButtonEnabled() {
+    public isResultButtonEnabled() {
         return this.state == State.SecondNumber;// && this.state != State.Loading;
     }
 
-    async elaborateResult() {
+    public isLoadingVisible() {
+        return this.state == State.Loading;
+    }
+
+    private async elaborateResult() {
         // mock
         this.state = State.Loading;
         await new Promise( resolve => setTimeout(resolve, 500) );
@@ -79,12 +90,12 @@ export class CalculatorComponent implements OnInit {
         this.showResult();
     }
 
-    showResult() {
-        
+    private showResult() {
+        this.screenValue = '<solution>';
     }
 
 
-    handleKeyboardEvents(keyPress: KeyboardEvent) {
+    public handleKeyboardEvents(keyPress: KeyboardEvent) {
         let key = keyPress.key;
         switch (key) {
             case '0': this.digitNumber(key); break;
@@ -107,16 +118,15 @@ export class CalculatorComponent implements OnInit {
     }
 
     
-    showPreviousFromHistory() {
-
+    public showPreviousFromHistory() {
+        // show prev history
     }
 
-    showNextFromHistory() {
-
+    public showNextFromHistory() {
+        // show next history
     }
 
 }
-
 
 export enum State {
     FirstNumber,
