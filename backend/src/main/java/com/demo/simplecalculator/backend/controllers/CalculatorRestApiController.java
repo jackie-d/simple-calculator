@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(path = "${API_PREFIX_V}")
 public class CalculatorRestApiController {
     
     @Autowired

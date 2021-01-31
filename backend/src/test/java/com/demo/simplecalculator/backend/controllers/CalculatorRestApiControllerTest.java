@@ -27,51 +27,51 @@ public class CalculatorRestApiControllerTest {
     
     @Test
     void getEquationSolution() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(status().isOk()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.number1").value(12));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.number2").value(3));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.signSymbol").value(add));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(15));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",sub,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",sub,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(9));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",mul,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",mul,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(36));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",div,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",div,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(4));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","-12",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","-12",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(-9));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","-12",sub,"-3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","-12",sub,"-3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(-9));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","-12",mul,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","-12",mul,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(-36));
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","-12",div,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","-12",div,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andExpect(jsonPath("$.result").value(-4));
     }
@@ -80,98 +80,98 @@ public class CalculatorRestApiControllerTest {
     void getEquationSolutionFiltersInvalidInput() throws Exception {
         // filter block
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","A",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","A",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}",null,add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}",null,add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12","5","3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12","5","3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",null,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",null,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12","","3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12","","3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,"?")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,"?")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,null)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,null)
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","12",add,"")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","12",add,"")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2,2",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","2,2",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}",".2",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}",".2",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2.",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","2.",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2.2.",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","2.2.",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2-",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","2-",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","2","•","3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","2","•","3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3.5",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","3.5",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3",add,"3.0")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","3",add,"3.0")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotAcceptable()).andReturn();
         
         // filter pass
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","3",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
        
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","-3",add,"3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","-3",add,"3")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","3",add,"1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","3",add,"1")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","1",sub,"1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","1",sub,"1")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","1",mul,"1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","1",mul,"1")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
         
-        mockMvc.perform(MockMvcRequestBuilders.get("/solve/{number1}/{sign}/{number2}","1",div,"1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","1",div,"1")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
     }
