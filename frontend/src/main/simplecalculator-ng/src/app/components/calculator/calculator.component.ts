@@ -27,7 +27,7 @@ export class CalculatorComponent implements OnInit {
     public faSpinner = faSpinner;
 
     private history = [];
-    private currentHistoryShown = null;
+    private currentHistoryShown = -1;
 
     constructor() { }
 
@@ -119,11 +119,37 @@ export class CalculatorComponent implements OnInit {
 
     
     public showPreviousFromHistory() {
-        // show prev history
+        if ( !this.isPreviousFromHistoryEnabled() ) {
+            return;
+        }
+        this.state = State.Result;
+        this.currentHistoryShown++;
+        this.showHistoryEquation();
     }
 
     public showNextFromHistory() {
-        // show next history
+        if ( !this.isNextFromHistoryEnabled() ) {
+                return;
+        }
+        this.state = State.Result;
+        this.currentHistoryShown++;
+        this.showHistoryEquation();
+    }
+
+    private showHistoryEquation() {
+        const equation = this.history[this.currentHistoryShown];
+        this.upperScreenValue = equation.number1 + ' ' + equation.sign + ' ' + equation.number2;
+        this.screenValue = equation.result;
+    }
+
+    public isNextFromHistoryEnabled() {
+        return this.history && this.history.length > 0 && 
+            this.currentHistoryShown > 0;
+    }
+
+    public isPreviousFromHistoryEnabled() {
+        return this.history && this.history.length > 0 &&
+            this.currentHistoryShown < this.history.length - 1;
     }
 
 }
