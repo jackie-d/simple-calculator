@@ -19,7 +19,7 @@ public class Equation {
         put(Sign.PLUS, "+");
         put(Sign.MINUS, "-");
         put(Sign.MULTIPLICATION, "x");
-        put(Sign.DIVISION, "%");
+        put(Sign.DIVISION, ":");
     }};
     
     final public static Equation.Sign getSignBySymbol(String signSymbol) {
