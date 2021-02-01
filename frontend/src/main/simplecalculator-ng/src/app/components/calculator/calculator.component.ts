@@ -83,7 +83,7 @@ export class CalculatorComponent implements OnInit {
     }
 
     public isSignButtonsEnabled() {
-        return this.state == State.FirstNumber;// && this.state != State.Loading;
+        return this.state == State.FirstNumber || this.state == State.Result;// && this.state != State.Loading;
     }
 
     public isResultButtonEnabled() {
@@ -181,7 +181,8 @@ export class CalculatorComponent implements OnInit {
 
     private showHistoryEquation() {
         const equation = this.history[this.currentHistoryShown];
-        this.upperScreenValue = equation.number1 + ' ' + equation.signSymbol + ' ' + equation.number2;
+        const symbol = Object.keys(SignSymbols).find(key => SignSymbols[key] === equation.signSymbol);
+        this.upperScreenValue = equation.number1 + ' ' + symbol + ' ' + equation.number2;
         this.screenValue = equation.result;
     }
 
