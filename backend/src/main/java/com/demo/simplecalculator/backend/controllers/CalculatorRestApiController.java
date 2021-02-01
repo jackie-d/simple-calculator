@@ -1,6 +1,7 @@
 package com.demo.simplecalculator.backend.controllers;
 
 import com.demo.simplecalculator.backend.models.Equation;
+import com.demo.simplecalculator.backend.service.CalculatorHistoryService;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class CalculatorRestApiController {
     
     @Autowired
     SimpleCalculator simpleCalculator;
+    
+    @Autowired
+    private CalculatorHistoryService calculatorHistoryService;
 
     @RequestMapping(value="/solve/{number1}/{sign}/{number2}", method = RequestMethod.GET)
     public ResponseEntity<Equation> solveEquation(
@@ -32,7 +36,8 @@ public class CalculatorRestApiController {
         }
         
         Equation solution = getEquationSolution(number1, number2, sign);
-        return new ResponseEntity<>(solution, HttpStatus.OK);
+        Equation storedSolution = storeSolution(solution);
+        return new ResponseEntity<>(storedSolution, HttpStatus.OK);
     }
     
     private boolean isInputAcceptable(String number1, String number2, String sign) {
@@ -52,6 +57,7 @@ public class CalculatorRestApiController {
         return Equation.SignSymbols.values().contains(value);
     }
     
+    // This method may be moved in a component or the SimpleCalculator class
     private Equation getEquationSolution(String number1, String number2, String signSymbol) {
         int int1 = Integer.valueOf(number1);
         int int2 = Integer.valueOf(number2);
@@ -76,6 +82,10 @@ public class CalculatorRestApiController {
         Equation solution = new Equation(int1, int2, sign, result);
         
         return solution;
+    }
+
+    private Equation storeSolution(Equation solution) {
+        return this.calculatorHistoryService.save(solution);
     }
 
 }

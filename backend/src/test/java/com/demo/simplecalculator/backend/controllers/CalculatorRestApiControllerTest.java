@@ -1,14 +1,19 @@
 package com.demo.simplecalculator.backend.controllers;
 
 import com.demo.simplecalculator.backend.models.Equation;
+import com.demo.simplecalculator.backend.service.CalculatorHistoryService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,6 +29,18 @@ public class CalculatorRestApiControllerTest {
     
     @Autowired
     MockMvc mockMvc;
+    
+    @MockBean
+    private CalculatorHistoryService calculatorHistoryService;
+    
+    @BeforeEach
+    void setup(){
+        when(calculatorHistoryService.save(any(Equation.class))).thenAnswer(i -> {
+            Equation eq = (Equation) i.getArguments()[0];
+            eq.setId(1);
+            return eq;
+        });
+    }
     
     @Test
     void getEquationSolution() throws Exception {
