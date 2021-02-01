@@ -5,12 +5,13 @@ import com.demo.simplecalculator.backend.repository.CalculatorHistoryRepository;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CalculatorHistoryService {
     
-    final public static int PAGE_SIZE = 10;
+    final public static int PAGE_SIZE = 1;
 
     private CalculatorHistoryRepository calculatorHistoryRepository;
     
@@ -23,7 +24,7 @@ public class CalculatorHistoryService {
     }
     
     public List<Equation> getHistoryByPage(int pageOffset){
-        Pageable pageable = PageRequest.of(pageOffset, PAGE_SIZE);
+        Pageable pageable = PageRequest.of(pageOffset, PAGE_SIZE, Sort.by("id").descending());
         return calculatorHistoryRepository.findAll(pageable).getContent();
     }
     
