@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CalculatorHistoryService {
+    
+    final public static int PAGE_SIZE = 10;
 
     private CalculatorHistoryRepository calculatorHistoryRepository;
     
@@ -17,7 +19,12 @@ public class CalculatorHistoryService {
     }
     
     public List<Equation> getHistory(){
-        return calculatorHistoryRepository.findAll();
+        return this.getHistoryByPage(0);
+    }
+    
+    public List<Equation> getHistoryByPage(int pageOffset){
+        Pageable pageable = PageRequest.of(pageOffset, PAGE_SIZE);
+        return calculatorHistoryRepository.findAll(pageable).getContent();
     }
     
 }
