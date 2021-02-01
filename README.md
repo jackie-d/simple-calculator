@@ -4,9 +4,9 @@ Project in Spring Boot + Angular
 
 ## Web links
 
-Repo:
+Repo: [https://github.com/jackie-d/simple-calculator](https://github.com/jackie-d/simple-calculator)
 
-Hosting: 
+Hosting: [http://simplecalculator-env.eba-rw3syze5.eu-west-1.elasticbeanstalk.com/home](http://simplecalculator-env.eba-rw3syze5.eu-west-1.elasticbeanstalk.com/home)
 
 ## Setup Instructions
 
@@ -23,6 +23,44 @@ mvn clean install
 cd backend
 mvn spring-boot:run
 ```
+
+__Only frontend (with live reload):__
+
+```
+cd frontend/src/main/simplecalculator-ng
+ng serve
+```
+
+## Build Instructions
+
+```
+mvn package
+```
+
+the _tomcat compatible_ produced `.war` file app will be found in the 
+`backend/target/` folder.
+
+
+## Test Instructions
+
+__For backend:__
+
+Junit and spring boot test
+
+```
+cd backend
+mvn test
+```
+
+__For frontend:__
+
+Karma test suite for angular
+
+```
+cd fronted/src/main/simplecalculator-ng
+ng test
+```
+
 
 ## Notes
 
@@ -47,8 +85,19 @@ through the totality of it and so obtain the history of the calculations to revi
 
 The backend has a strong architecture with SOLID and DRY pattern applied, a 
 complete test suite with good coverage and and rely on a H2 database to store 
-the data for the history of the calculation to provide to review.
+the data for the history of the calculations to provide to review.
 
+__Additional features:__
+
+- Tests for backend (TDD)
+- Sample tests for frontend (unit basics)
+- Simple client/server authorization with header token
+- Support for consequential calculations, negative numbers, calculations with zero
+- Responsive UI
+
+__Todo:__
+
+- API [limiting](https://github.com/shlomokoren/spring-boot-throttling) for HTTP requests enforce
 
 
 _© Year 2021 - Jackie degli Innocenti_
