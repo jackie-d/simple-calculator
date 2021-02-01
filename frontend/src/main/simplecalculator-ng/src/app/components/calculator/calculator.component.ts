@@ -102,7 +102,6 @@ export class CalculatorComponent implements OnInit {
         try {
             const equationObj: any = await this.api.solveEquation(this.number1, this.number2, signSymbol).toPromise();
             const equation: Equation = equationObj;
-            console.log(equation);
             this.state = State.Result;
             this.history = [];
             this.showResult(equation);

@@ -87,22 +87,13 @@
                         </goals>
                 </execution>
                 <execution>
-                        <id>npm run build</id>
-                        <goals>
-                                <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                                <arguments>run build</arguments>
-                        </configuration>
-                </execution>
-                <execution>
-                        <id>prod</id>
+                        <id>npm run-script build --prod</id>
                         <goals>
                                 <goal>npm</goal>
                         </goals>
                         <configuration>
                                 <arguments>
-                                        run-script build
+                                        run-script build-prod
                                 </arguments>
                         </configuration>
                         <phase>generate-resources</phase>
