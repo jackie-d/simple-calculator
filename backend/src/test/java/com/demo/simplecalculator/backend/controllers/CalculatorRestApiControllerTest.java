@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -206,10 +207,10 @@ public class CalculatorRestApiControllerTest {
         
         List<Equation> equationList = new ArrayList();
         for ( int i = 0; i < testPages * pageSize; i++ ) {
-            equationList.add(new Equation(100, 20, 50, Equation.Sign.PLUS, 70));
+            equationList.add(new Equation(100, 20, 50, Equation.Sign.PLUS, 70, null));
         }
         
-        when(calculatorHistoryService.getHistoryByPage(any(Integer.class))).thenAnswer(i -> {
+        when(calculatorHistoryService.getHistoryByPage(any(Integer.class), nullable(String.class))).thenAnswer(i -> {
             Integer page = (Integer) i.getArguments()[0];
             if ( page > testPages - 1 ) {
                 return new ArrayList();
@@ -249,6 +250,37 @@ public class CalculatorRestApiControllerTest {
         ).andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$", hasSize(0)));
+    }
+    
+    @Test
+    void ensureClientTokenSecurity() throws Exception {
+        
+        when(calculatorHistoryService.getHistoryByPage(any(Integer.class), nullable(String.class))).thenAnswer(i -> {
+            String clientToken = (String) i.getArguments()[1];
+            if ( "TOKEN-TEST-12345".equals(clientToken) ) {
+                return new ArrayList(){{ add(new Equation(123,456,Equation.Sign.PLUS,579)); }};
+            } else if ( "TOKEN-TEST-67890".equals(clientToken) ) {
+                return new ArrayList(){{ add(new Equation(678,90,Equation.Sign.PLUS,768)); }};
+            }  
+            return new ArrayList(){{ add(new Equation(0,0,Equation.Sign.PLUS,0)); }};
+        });
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getHistory")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("client-token", "TOKEN-TEST-12345")
+        ).andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].number1").value(123));
+                
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getHistory")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("client-token", "TOKEN-TEST-67890")
+        ).andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].number1").value(678));
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getHistory")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].number1").value(0));
     }
     
 }

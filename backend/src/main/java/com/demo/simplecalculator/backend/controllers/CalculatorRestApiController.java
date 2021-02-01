@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,8 @@ public class CalculatorRestApiController {
     public ResponseEntity<Equation> solveEquation(
         @PathVariable("number1") String number1, 
         @PathVariable("sign") String sign,
-        @PathVariable("number2") String number2
+        @PathVariable("number2") String number2,
+        @RequestHeader(value="client-token", required=false) String clientToken
     ) {
         boolean isInputAcceptable = isInputAcceptable(number1, number2, sign);
         
@@ -38,20 +40,21 @@ public class CalculatorRestApiController {
         }
         
         Equation solution = getEquationSolution(number1, number2, sign);
-        Equation storedSolution = storeSolution(solution);
+        Equation storedSolution = storeSolution(solution, clientToken);
         return new ResponseEntity<>(storedSolution, HttpStatus.OK);
     }
     
     @RequestMapping(value={ "/getHistory/{page}", "/getHistory" }, method = RequestMethod.GET)
     public ResponseEntity<List<Equation>> getHistory(
-        @PathVariable("page") Optional<Integer> pageParameter
+        @PathVariable("page") Optional<Integer> pageParameter,
+        @RequestHeader(value="client-token", required=false) String clientToken
     ) {
         int page = 0;
         if (pageParameter.isPresent()) {
             page = pageParameter.get();
         }
         
-        List<Equation> history = this.calculatorHistoryService.getHistoryByPage(page);
+        List<Equation> history = this.calculatorHistoryService.getHistoryByPage(page, clientToken);
         
         return new ResponseEntity<>(history, HttpStatus.OK);
     }
@@ -100,7 +103,8 @@ public class CalculatorRestApiController {
         return solution;
     }
 
-    private Equation storeSolution(Equation solution) {
+    private Equation storeSolution(Equation solution, String clientToken) {
+        solution.setClientToken(clientToken);
         return this.calculatorHistoryService.save(solution);
     }
 

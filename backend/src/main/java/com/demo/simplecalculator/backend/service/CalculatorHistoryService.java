@@ -20,12 +20,20 @@ public class CalculatorHistoryService {
     }
     
     public List<Equation> getHistory(){
-        return this.getHistoryByPage(0);
+        return this.getHistoryByPage(0, null);
+    }
+    
+    public List<Equation> getHistory(String clientToken){
+        return this.getHistoryByPage(0, clientToken);
     }
     
     public List<Equation> getHistoryByPage(int pageOffset){
+        return this.getHistoryByPage(pageOffset, null);
+    }
+    
+    public List<Equation> getHistoryByPage(int pageOffset, String clientToken){
         Pageable pageable = PageRequest.of(pageOffset, PAGE_SIZE, Sort.by("id").descending());
-        return calculatorHistoryRepository.findAll(pageable).getContent();
+        return calculatorHistoryRepository.findByClientToken(clientToken, pageable).getContent();
     }
     
     public Equation save(Equation equation) {

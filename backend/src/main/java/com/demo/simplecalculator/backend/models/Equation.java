@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.Column;
 import org.springframework.util.StringUtils;
 
 @Entity
@@ -42,10 +43,22 @@ public class Equation {
     private Sign sign = null;
     private String signSymbol = null;
     private double result;
+    @Column(name = "clientToken")
+    private String clientToken;
     
     // constructors
 
     public Equation() {
+    }
+    
+    public Equation ( long id, int number1, int number2, Sign sign, double result, String clientToken ) {
+        this.id = id;
+        this.number1 = number1;
+        this.number2 = number2;
+        this.sign = sign;
+        this.signSymbol = this.SignSymbols.get(sign);
+        this.result = result;
+        this.clientToken = clientToken;
     }
 
     public Equation ( long id, int number1, int number2, Sign sign, double result ) {
@@ -122,6 +135,14 @@ public class Equation {
     public void setSignSymbol(String signSymbol) {
         this.signSymbol = signSymbol;
         this.sign = getSignBySymbol(signSymbol);
+    }
+
+    public String getClientToken() {
+        return clientToken;
+    }
+
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
     }
     
 }
