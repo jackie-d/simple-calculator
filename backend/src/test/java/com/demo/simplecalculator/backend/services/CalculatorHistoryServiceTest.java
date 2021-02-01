@@ -81,4 +81,14 @@ public class CalculatorHistoryServiceTest {
         assertEquals(0, equationsList.size());
     }
     
+    @Test
+    void saveEquation() {
+        CalculatorHistoryService calculatorHistoryService = new CalculatorHistoryService(calculatorHistoryRepository);
+        Equation equationExample = new Equation(10, 1, Equation.Sign.MULTIPLICATION, 10);
+
+        calculatorHistoryService.save(equationExample);
+
+        assertEquals(1, calculatorHistoryRepository.count());
+    }
+    
 }

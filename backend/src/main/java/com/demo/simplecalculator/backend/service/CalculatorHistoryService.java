@@ -27,4 +27,8 @@ public class CalculatorHistoryService {
         return calculatorHistoryRepository.findAll(pageable).getContent();
     }
     
+    public Equation save(Equation equation) {
+        return calculatorHistoryRepository.save(equation);
+    }
+    
 }
