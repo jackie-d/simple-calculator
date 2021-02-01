@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ApiService } from './api.service';
 
@@ -27,17 +26,5 @@ describe('ApiService', () => {
      expect(service.getEquationsHistory).toBeTruthy();
     });
 
-    it('', () => {
-        const tkDataService = getTestBed().get(TkDataService)
-
-        httpService.get<any>(dummyUrl, dummyTelemetryAction).subscribe(
-                    (response: HttpResponse<any>) => {
-                        expect(response).toBeTruthy();
-        }
-
-        const req1 = httpMock.expectOne(dummyUrl);
-
-        req1.flush(null, { status: 200, statusText: 'ok' });
-    });
 
 });
