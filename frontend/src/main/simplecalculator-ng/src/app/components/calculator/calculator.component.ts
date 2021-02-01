@@ -6,6 +6,8 @@ import { Equation } from '../../models/equation';
 
 import { faCaretSquareLeft, faCaretSquareRight, faEraser, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
+export const HISTORY_PAGE_SIZE = 10;
+
 @Component({
     selector: 'app-calculator',
     templateUrl: './calculator.component.html',
@@ -32,12 +34,15 @@ export class CalculatorComponent implements OnInit {
 
     private history = [];
     private currentHistoryShown = -1;
+    private currentHistoryPageLoaded = null;
 
     constructor(
         private api: ApiService
-    ) { }
+    ) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.loadHistoryNextPage();
+    }
 
     public digitNumber(number: string){
         if ( this.state == State.Result ) {
@@ -132,10 +137,15 @@ export class CalculatorComponent implements OnInit {
         }
     }
 
+    // Equation history and pagination handling
     
-    public showPreviousFromHistory() {
+    public async showPreviousFromHistory() {
         if ( !this.isPreviousFromHistoryEnabled() ) {
             return;
+        }
+        if ( this.currentHistoryShown + 1 > this.currentHistoryPageLoaded * HISTORY_PAGE_SIZE - 1 ) {
+            this.state = State.Loading;
+            await this.loadHistoryNextPage();
         }
         this.state = State.Result;
         this.currentHistoryShown++;
@@ -147,7 +157,7 @@ export class CalculatorComponent implements OnInit {
                 return;
         }
         this.state = State.Result;
-        this.currentHistoryShown++;
+        this.currentHistoryShown--;
         this.showHistoryEquation();
     }
 
@@ -165,6 +175,22 @@ export class CalculatorComponent implements OnInit {
     public isPreviousFromHistoryEnabled() {
         return this.history && this.history.length > 0 &&
             this.currentHistoryShown < this.history.length - 1;
+    }
+
+    private loadHistoryNextPage() : Promise<boolean> {
+        const pageToLoad = !this.currentHistoryPageLoaded ? 0 : this.currentHistoryPageLoaded + 1;
+        this.currentHistoryPageLoaded = pageToLoad;
+        return this.api.getEquationsHistory(pageToLoad).toPromise()
+            .then((historySlice: Equation[] )=> {
+                if ( !historySlice ) {
+                    return false;
+                }
+                for ( let i = 0; i < historySlice.length; i++ ) {
+                    const elPosition = (pageToLoad * HISTORY_PAGE_SIZE) + i;
+                    this.history[elPosition] = historySlice[i];
+                }
+                return true;
+            });
     }
 
 }

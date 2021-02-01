@@ -24,6 +24,12 @@ export class ApiService {
         return this.doRequest(method, urlSegment);
     }
 
+    public getEquationsHistory(page = 0) {
+        const method = 'getHistory';
+        const urlSegment = `${page}`;
+        return this.doRequest(method, urlSegment);
+    }
+
     private getEndpointUrl() {
         return environment.endpointUrl;
     }
