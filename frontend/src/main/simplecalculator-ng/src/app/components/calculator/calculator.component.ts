@@ -51,6 +51,14 @@ export class CalculatorComponent implements OnInit {
         this.screenValue += number;
     }
 
+    public digitMinus() {
+        if ( this.screenValue == '' ) {
+            this.screenValue = '-';
+        } else {
+            this.digitSign('-');
+        }
+    }
+
     public digitSign(sign: string) {
         if ( this.screenValue == '' ) {
             return;
@@ -82,8 +90,13 @@ export class CalculatorComponent implements OnInit {
         this.resetHistoryNavigation();
     }
 
+
     public isSignButtonsEnabled() {
         return this.state == State.FirstNumber || this.state == State.Result;// && this.state != State.Loading;
+    }
+
+    public isMinusButtonEnabled() {
+        return this.isSignButtonsEnabled() || this.state == State.SecondNumber;
     }
 
     public isResultButtonEnabled() {

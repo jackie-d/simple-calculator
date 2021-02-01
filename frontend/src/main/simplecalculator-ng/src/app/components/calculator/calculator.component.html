@@ -47,7 +47,7 @@
     <button (click)="digitNumber('1')" class="_25 bold button calcelement">1</button>
     <button (click)="digitNumber('2')" class="_25 bold button calcelement">2</button>
     <button (click)="digitNumber('3')" class="_25 bold button calcelement">3</button>
-    <button (click)="digitSign('-')" class="_25 button calcelement" [disabled]="!isSignButtonsEnabled()">-</button>
+    <button (click)="digitMinus()" class="_25 button calcelement" [disabled]="!isMinusButtonEnabled()">-</button>
     <button (click)="digitNumber('0')" class="_25 bold button calcelement">0</button>
     <button (click)="getResult()" class="_25 _50 button calcelement" [disabled]="!isResultButtonEnabled()">=</button>
     <button (click)="digitSign('+')" class="_25 button calcelement" [disabled]="!isSignButtonsEnabled()">+</button>
