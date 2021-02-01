@@ -30,10 +30,10 @@
     <div (click)="reset()" class="_25 _50 button calcelement">
       <fa-icon [icon]="faEraser"></fa-icon>
     </div>
-    <button (click)="showPreviousFromHistory()" class="_25 button calcelement" [disabled]="!isPreviousFromHistoryEnabled()">
+    <button (click)="showHistoryPrevious()" class="_25 button calcelement" [disabled]="!isPreviousHistoryEnabled()">
         <fa-icon [icon]="faCaretSquareLeft"></fa-icon>
     </button>
-    <button (click)="showNextFromHistory()" class="_25 button calcelement" [disabled]="!isNextFromHistoryEnabled()">
+    <button (click)="showHistoryNext()" class="_25 button calcelement" [disabled]="!isNextHistoryEnabled()">
         <fa-icon [icon]="faCaretSquareRight"></fa-icon>
     </button>
     <button (click)="digitNumber('7')" class="_25 bold button calcelement">7</button>

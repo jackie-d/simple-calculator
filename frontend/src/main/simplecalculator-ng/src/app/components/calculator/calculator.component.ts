@@ -6,7 +6,7 @@ import { Equation } from '../../models/equation';
 
 import { faCaretSquareLeft, faCaretSquareRight, faEraser, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-export const HISTORY_PAGE_SIZE = 10;
+export const HISTORY_PAGE_SIZE = 1;
 
 @Component({
     selector: 'app-calculator',
@@ -32,16 +32,16 @@ export class CalculatorComponent implements OnInit {
     public faEraser = faEraser;
     public faSpinner = faSpinner;
 
-    private history = [];
-    private currentHistoryShown = -1;
-    private currentHistoryPageLoaded = null;
+    public history = [];
+    public currentHistoryShown = -1;
+    public isLastHistoryElementShown = false;
 
     constructor(
         private api: ApiService
     ) {}
 
     ngOnInit(): void {
-        this.loadHistoryNextPage();
+        this.loadHistoryNextElement();
     }
 
     public digitNumber(number: string){
@@ -79,6 +79,7 @@ export class CalculatorComponent implements OnInit {
         this.number1 = null;
         this.number2 = null;
         this.sign = null;
+        this.resetHistoryNavigation();
     }
 
     public isSignButtonsEnabled() {
@@ -103,6 +104,7 @@ export class CalculatorComponent implements OnInit {
             const equation: Equation = equationObj;
             console.log(equation);
             this.state = State.Result;
+            this.history = [];
             this.showResult(equation);
         } catch(error) {
             alert('API Server error');
@@ -139,58 +141,66 @@ export class CalculatorComponent implements OnInit {
 
     // Equation history and pagination handling
     
-    public async showPreviousFromHistory() {
-        if ( !this.isPreviousFromHistoryEnabled() ) {
+    public async showHistoryPrevious() {
+        if ( !this.isPreviousHistoryEnabled() ) {
             return;
         }
-        if ( this.currentHistoryShown + 1 > this.currentHistoryPageLoaded * HISTORY_PAGE_SIZE - 1 ) {
+        let isMoreElementToShow = true;
+        if ( this.currentHistoryShown + 1 > this.history.length - 1 ) {
             this.state = State.Loading;
-            await this.loadHistoryNextPage();
+            isMoreElementToShow = await this.loadHistoryNextElement();
+            this.state = State.Result;
+        } 
+        if ( isMoreElementToShow ) {
+            this.currentHistoryShown++;
+            this.showHistoryEquation();
+        } else {
+            this.isLastHistoryElementShown = true;
         }
-        this.state = State.Result;
-        this.currentHistoryShown++;
-        this.showHistoryEquation();
     }
 
-    public showNextFromHistory() {
-        if ( !this.isNextFromHistoryEnabled() ) {
-                return;
+    public isPreviousHistoryEnabled() {
+        return this.history && Array.isArray(this.history) 
+            && !this.isLastHistoryElementShown;
+    }
+
+    public showHistoryNext() {
+        if ( !this.isNextHistoryEnabled() || this.currentHistoryShown == 0 ) {
+            this.reset();
+            return;
         }
         this.state = State.Result;
         this.currentHistoryShown--;
+        this.isLastHistoryElementShown = false;
         this.showHistoryEquation();
+    }
+
+    public isNextHistoryEnabled() {
+        return this.history && this.history.length > 0 && 
+            this.currentHistoryShown >= 0;
     }
 
     private showHistoryEquation() {
         const equation = this.history[this.currentHistoryShown];
-        this.upperScreenValue = equation.number1 + ' ' + equation.sign + ' ' + equation.number2;
+        this.upperScreenValue = equation.number1 + ' ' + equation.signSymbol + ' ' + equation.number2;
         this.screenValue = equation.result;
     }
 
-    public isNextFromHistoryEnabled() {
-        return this.history && this.history.length > 0 && 
-            this.currentHistoryShown > 0;
-    }
-
-    public isPreviousFromHistoryEnabled() {
-        return this.history && this.history.length > 0 &&
-            this.currentHistoryShown < this.history.length - 1;
-    }
-
-    private loadHistoryNextPage() : Promise<boolean> {
-        const pageToLoad = !this.currentHistoryPageLoaded ? 0 : this.currentHistoryPageLoaded + 1;
-        this.currentHistoryPageLoaded = pageToLoad;
-        return this.api.getEquationsHistory(pageToLoad).toPromise()
+    private loadHistoryNextElement() : Promise<boolean> {
+        const elementToLoad = this.currentHistoryShown + 1;
+        return this.api.getEquationsHistory(elementToLoad).toPromise()
             .then((historySlice: Equation[] )=> {
-                if ( !historySlice ) {
+                if ( !historySlice || historySlice.length == 0 ) {
                     return false;
                 }
-                for ( let i = 0; i < historySlice.length; i++ ) {
-                    const elPosition = (pageToLoad * HISTORY_PAGE_SIZE) + i;
-                    this.history[elPosition] = historySlice[i];
-                }
+                this.history[elementToLoad] = historySlice[0];
                 return true;
             });
+    }
+
+    private resetHistoryNavigation() {
+        this.currentHistoryShown = -1;
+        this.isLastHistoryElementShown = false;
     }
 
 }
