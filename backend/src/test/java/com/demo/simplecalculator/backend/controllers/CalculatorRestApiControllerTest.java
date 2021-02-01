@@ -2,6 +2,11 @@ package com.demo.simplecalculator.backend.controllers;
 
 import com.demo.simplecalculator.backend.models.Equation;
 import com.demo.simplecalculator.backend.service.CalculatorHistoryService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
+import static org.hamcrest.Matchers.hasSize;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -191,6 +197,58 @@ public class CalculatorRestApiControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/solve/{number1}/{sign}/{number2}","1",div,"1")
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
+    }
+    
+    @Test
+    void getHistory() throws JsonProcessingException, Exception{
+        final int pageSize = CalculatorHistoryService.PAGE_SIZE;
+        final int testPages = 3;
+        
+        List<Equation> equationList = new ArrayList();
+        for ( int i = 0; i < testPages * pageSize; i++ ) {
+            equationList.add(new Equation(100, 20, 50, Equation.Sign.PLUS, 70));
+        }
+        
+        when(calculatorHistoryService.getHistoryByPage(any(Integer.class))).thenAnswer(i -> {
+            Integer page = (Integer) i.getArguments()[0];
+            if ( page > testPages - 1 ) {
+                return new ArrayList();
+            }
+            return equationList.subList(pageSize * page, pageSize * page + pageSize);
+        });
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getHistory")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(pageSize)))
+            .andExpect(jsonPath("$[0].number1").value(20))
+            .andExpect(jsonPath("$[0].result").value(70))
+            .andExpect(jsonPath("$[0].id").value(100));
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getHistory/0")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(pageSize)))
+            .andExpect(jsonPath("$[0].number1").value(20))
+            .andExpect(jsonPath("$[0].result").value(70))
+            .andExpect(jsonPath("$[0].id").value(100));
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getHistory/1")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(pageSize)))
+            .andExpect(jsonPath("$[0].number1").value(20))
+            .andExpect(jsonPath("$[0].result").value(70))
+            .andExpect(jsonPath("$[0].id").value(100));
+        
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getHistory/6")
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(0)));
     }
     
 }

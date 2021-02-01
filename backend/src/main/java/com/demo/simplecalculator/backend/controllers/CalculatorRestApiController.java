@@ -2,7 +2,9 @@ package com.demo.simplecalculator.backend.controllers;
 
 import com.demo.simplecalculator.backend.models.Equation;
 import com.demo.simplecalculator.backend.service.CalculatorHistoryService;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,20 @@ public class CalculatorRestApiController {
         return new ResponseEntity<>(storedSolution, HttpStatus.OK);
     }
     
+    @RequestMapping(value={ "/getHistory/{page}", "/getHistory" }, method = RequestMethod.GET)
+    public ResponseEntity<List<Equation>> getHistory(
+        @PathVariable("page") Optional<Integer> pageParameter
+    ) {
+        int page = 0;
+        if (pageParameter.isPresent()) {
+            page = pageParameter.get();
+        }
+        
+        List<Equation> history = this.calculatorHistoryService.getHistoryByPage(page);
+        
+        return new ResponseEntity<>(history, HttpStatus.OK);
+    }
+    
     private boolean isInputAcceptable(String number1, String number2, String sign) {
         return isIntNumber(number1) && isIntNumber(number2) && isValidSign(sign);
     }
@@ -57,7 +73,7 @@ public class CalculatorRestApiController {
         return Equation.SignSymbols.values().contains(value);
     }
     
-    // This method may be moved in a component or the SimpleCalculator class
+    // The following method may be moved in a component or the SimpleCalculator class
     private Equation getEquationSolution(String number1, String number2, String signSymbol) {
         int int1 = Integer.valueOf(number1);
         int int2 = Integer.valueOf(number2);
