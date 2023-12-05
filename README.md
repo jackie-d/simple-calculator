@@ -6,7 +6,7 @@ Project in Spring Boot + Angular
 
 Repo: [https://github.com/jackie-d/simple-calculator](https://github.com/jackie-d/simple-calculator)
 
-Hosting: [http://simplecalculator-env.eba-rw3syze5.eu-west-1.elasticbeanstalk.com/home](http://simplecalculator-env.eba-rw3syze5.eu-west-1.elasticbeanstalk.com/home)
+Online Web-app: [http://calc.eu-north-1.elasticbeanstalk.com/](https://calc.eu-north-1.elasticbeanstalk.com/)
 
 ## Setup Instructions
 
@@ -15,6 +15,8 @@ Setup for development is automatic on run
 ```
 
 ```
+
+- *Requires Node v. 16 or less*
 
 ## Run Instructions
 
@@ -39,6 +41,9 @@ mvn package
 
 the _tomcat compatible_ produced `.war` file app will be found in the 
 `backend/target/` folder.
+
+*Before build:* on the front-end environment file replace the API endpoint with your production server: 
+`frontend\src\main\simplecalculator-ng\src\environments` on the `endpointUrl` variable - keeping the `/api/v1/` path on your domain
 
 
 ## Test Instructions

@@ -25,6 +25,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@schematics/angular": "^11.1.2",
     "rxjs": "^6.6.3",
+    "strip-ansi": "^3.0.1",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
   },
